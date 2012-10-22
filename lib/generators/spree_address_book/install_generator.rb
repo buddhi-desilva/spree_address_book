@@ -6,9 +6,17 @@ module SpreeAddressBook
       end
       
       def add_stylesheets
-        inject_into_file "app/assets/stylesheets/store/all.css", " *= require store/spree_address_book\n", :before => /\*\//, :verbose => true
+        source_stylesheet = Rails.root.join('app', 'assets', 'stylesheets', 'store', 'all.css')
+        destination_stylesheet = Rails.root.join('app', 'assets', 'stylesheets', 'store', 'all.css.scss')
+        
+        # If the files isn't an SASS file, we'll convert it into a SASS file
+        unless File.exists?(destination_stylesheet)
+          FileUtils.mv source_stylesheet, destination_stylesheet          
+        end
+
+        inject_into_file destination_stylesheet, "\n *= require store/index\n", :before => /\*\//, :verbose => true
       end
-    
+          
       def add_migrations
         run 'bundle exec rake railties:install:migrations FROM=spree_address_book'
       end
