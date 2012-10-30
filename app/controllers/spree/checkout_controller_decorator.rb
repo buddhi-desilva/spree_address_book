@@ -19,7 +19,6 @@ Spree::CheckoutController.class_eval do
         end
       end
 
-
     else
       params[:order].delete(:ship_address_id)
     end
